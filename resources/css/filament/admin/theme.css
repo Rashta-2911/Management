@@ -1,0 +1,733 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../vendor/filament/**/*.blade.php';
+
+/* ═══════════════════════════════════════════════════════════
+    PojokHunian Custom Theme
+    Brand Palette from Logo:
+      Navy   #1E2A45  — House body, "Hunian" text
+      Gold   #F5B731  — Background shape, "Pojok" text
+      Brick  #A0522D  — House roof accent
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Sidebar: Navy Background ─── */
+.fi-sidebar {
+    background: linear-gradient(160deg, #1E2A45 0%, #0F1520 100%) !important;
+    border-right: none !important;
+    box-shadow: 4px 0 24px rgba(30, 42, 69, 0.25) !important;
+}
+
+/* Sidebar Header / Brand area */
+.fi-sidebar-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding-bottom: 1rem !important;
+}
+
+/* Brand logo in sidebar */
+.fi-logo,
+.fi-sidebar-header a {
+    filter: drop-shadow(0 2px 8px rgba(245, 183, 49, 0.25));
+}
+
+/* Sidebar Navigation Groups */
+.fi-sidebar-group {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding-bottom: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+/* Navigation Group Label */
+.fi-sidebar-group-label,
+.fi-sidebar-group-button {
+    color: #F5B731 !important; /* Solid Gold for better visibility */
+    font-size: 0.6875rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+}
+
+/* Navigation Items */
+.fi-sidebar-item .fi-sidebar-item-btn,
+.fi-sidebar-item a,
+.fi-sidebar-item button,
+.fi-sidebar-item-label {
+    color: #FFFFFF !important; /* Pure White for maximum readability */
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.fi-sidebar-item-icon {
+    color: #E2E8F0 !important; /* Brighter Gray for icons */
+    transition: all 0.2s ease !important;
+}
+
+/* Hover state */
+.fi-sidebar-item a:hover,
+.fi-sidebar-item button:hover,
+.fi-sidebar-item .fi-sidebar-item-btn:hover {
+    background: linear-gradient(90deg, rgba(245, 183, 49, 0.15) 0%, rgba(160, 82, 45, 0.05) 100%) !important;
+    border-radius: 10px !important;
+    position: relative;
+}
+
+.fi-sidebar-item a:hover::before,
+.fi-sidebar-item button:hover::before,
+.fi-sidebar-item .fi-sidebar-item-btn:hover::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10%;
+    height: 80%;
+    width: 3px;
+    background-color: #F5B731;
+    border-radius: 0 4px 4px 0;
+}
+
+.fi-sidebar-item a:hover .fi-sidebar-item-label,
+.fi-sidebar-item button:hover .fi-sidebar-item-label,
+.fi-sidebar-item .fi-sidebar-item-btn:hover .fi-sidebar-item-label,
+.fi-sidebar-item a:hover .fi-sidebar-item-icon,
+.fi-sidebar-item button:hover .fi-sidebar-item-icon,
+.fi-sidebar-item .fi-sidebar-item-btn:hover .fi-sidebar-item-icon {
+    color: #FFFFFF !important; /* Solid White on hover */
+}
+
+/* Active state */
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn,
+.fi-sidebar-item.fi-active>.fi-sidebar-item-btn,
+.fi-sidebar-item.fi-active>a,
+.fi-sidebar-item.fi-active>button {
+    background: #FFFFFF !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn .fi-sidebar-item-label,
+.fi-sidebar-item.fi-active>.fi-sidebar-item-btn .fi-sidebar-item-label,
+.fi-sidebar-item.fi-active>a .fi-sidebar-item-label,
+.fi-sidebar-item.fi-active>button .fi-sidebar-item-label {
+    color: #000000 !important; /* Changed to Black */
+    font-weight: 700 !important;
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn .fi-sidebar-item-icon,
+.fi-sidebar-item.fi-active>.fi-sidebar-item-btn .fi-sidebar-item-icon,
+.fi-sidebar-item.fi-active>a .fi-sidebar-item-icon,
+.fi-sidebar-item.fi-active>button .fi-sidebar-item-icon {
+    color: #000000 !important; /* Changed to Black */
+}
+
+/* Sidebar Group Toggle Icon */
+.fi-sidebar-group-toggle-icon {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ─── Topbar / Header ─── */
+.fi-topbar {
+    background: #FFFFFF !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    border-bottom: 1px solid #F3F4F6 !important;
+}
+
+/* ─── Dashboard Content Area ─── */
+.fi-body {
+    background: #FAF8F5 !important;
+}
+
+/* ─── Section / Card Styling ─── */
+.fi-section {
+    border-radius: 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+.fi-section-header {
+    border-bottom: 1px solid #F3F4F6 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+    Stat Overview Widget — Premium Cards
+   ═══════════════════════════════════════════════════════════ */
+.fi-wi-stats-overview-stat {
+    border-radius: 18px !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden;
+    position: relative;
+    background: #FFFFFF !important;
+}
+
+.fi-wi-stats-overview-stat:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 12px 32px rgba(30, 42, 69, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Decorative gradient orb */
+.fi-wi-stats-overview-stat::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(245, 183, 49, 0.08), rgba(30, 42, 69, 0.04));
+    pointer-events: none;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fi-wi-stats-overview-stat:hover::before {
+    transform: scale(1.4);
+}
+
+/* Decorative bottom accent line */
+.fi-wi-stats-overview-stat::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #F5B731, #1E2A45);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.fi-wi-stats-overview-stat:hover::after {
+    opacity: 1;
+}
+
+/* Stat icon container */
+.fi-wi-stats-overview-stat-icon {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.fi-wi-stats-overview-stat:hover .fi-wi-stats-overview-stat-icon {
+    transform: scale(1.1) !important;
+}
+
+/* Stat value */
+.fi-wi-stats-overview-stat-value {
+    font-weight: 800 !important;
+    letter-spacing: -0.02em !important;
+    color: #1E2A45 !important;
+}
+
+/* Stat label */
+.fi-wi-stats-overview-stat-label {
+    font-weight: 600 !important;
+    color: #64748B !important;
+    letter-spacing: 0.01em !important;
+}
+
+/* Stat description */
+.fi-wi-stats-overview-stat-description {
+    font-weight: 500 !important;
+}
+
+/* Individual stat card color accents via custom classes */
+.stat-card-properti {
+    border-left: 4px solid #1E2A45 !important;
+}
+
+.stat-card-kamar {
+    border-left: 4px solid #F5B731 !important;
+}
+
+.stat-card-hunian {
+    border-left: 4px solid #A0522D !important;
+}
+
+.stat-card-penghuni {
+    border-left: 4px solid #3B82F6 !important;
+}
+
+.stat-card-terlambat {
+    border-left: 4px solid #EF4444 !important;
+}
+
+.stat-card-pendapatan {
+    border-left: 4px solid #10B981 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+    Chart Widgets — Premium Styling
+   ═══════════════════════════════════════════════════════════ */
+.fi-wi-chart {
+    border-radius: 18px !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+    background: #FFFFFF !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.fi-wi-chart:hover {
+    box-shadow: 0 8px 24px rgba(30, 42, 69, 0.1), 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Decorative top border accent */
+.fi-wi-chart::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #F5B731 0%, #1E2A45 50%, #A0522D 100%);
+    z-index: 10;
+}
+
+/* Chart section header */
+.fi-wi-chart .fi-section-header {
+    background: linear-gradient(180deg, rgba(30, 42, 69, 0.02) 0%, transparent 100%) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+    padding-top: 1.25rem !important;
+}
+
+.fi-wi-chart .fi-section-header-heading {
+    color: #1E2A45 !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+}
+
+.fi-wi-chart .fi-section-header-description {
+    color: #64748B !important;
+    font-size: 0.8125rem !important;
+}
+
+/* Chart canvas area */
+.fi-wi-chart .fi-section-content {
+    padding: 1rem 1.25rem 1.25rem !important;
+}
+
+/* ─── Table Styling ─── */
+.fi-ta {
+    border-radius: 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+.fi-ta-header-cell {
+    background: #F8F9FB !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: #6B7280 !important;
+    border-bottom: 2px solid #E5E7EB !important;
+}
+
+.fi-ta-row:nth-child(even) {
+    background: rgba(249, 250, 251, 0.5) !important;
+}
+
+.fi-ta-row {
+    transition: background-color 0.15s ease !important;
+}
+
+.fi-ta-row:hover {
+    background: rgba(245, 183, 49, 0.04) !important;
+}
+
+/* ─── Primary Button (Navy gradient) ─── */
+.fi-btn-primary {
+    background: linear-gradient(135deg, #1E2A45 0%, #2A3A5C 100%) !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(30, 42, 69, 0.25) !important;
+    transition: all 0.2s ease !important;
+}
+
+.fi-btn-primary:hover {
+    background: linear-gradient(135deg, #2A3A5C 0%, #1E2A45 100%) !important;
+    box-shadow: 0 4px 16px rgba(30, 42, 69, 0.35) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* ─── Badge Styling ─── */
+.fi-badge {
+    border-radius: 20px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+}
+
+/* ─── Form Inputs ─── */
+.fi-input {
+    border-radius: 10px !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.fi-input:focus-within {
+    border-color: #F5B731 !important;
+    box-shadow: 0 0 0 3px rgba(245, 183, 49, 0.12) !important;
+}
+
+/* ─── Modal Styling ─── */
+.fi-modal-window {
+    border-radius: 20px !important;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ─── Auth Pages (Register) Styling ─── */
+.fi-simple-layout {
+    background: #FAF8F5 !important;
+}
+
+.fi-simple-main-ctn {
+    border-radius: 20px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06) !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+/* ─── Notification Styling ─── */
+.fi-no {
+    border-radius: 14px !important;
+}
+
+/* ─── Breadcrumb ─── */
+.fi-breadcrumbs {
+    font-size: 0.8125rem !important;
+}
+
+/* ─── Page Header ─── */
+.fi-header-heading {
+    color: #1E2A45 !important;
+    font-weight: 700 !important;
+}
+
+/* ─── Scrollbar (WebKit) ─── */
+.fi-sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.fi-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.fi-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.fi-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ─── Collapsed Sidebar Icon Colors ─── */
+.fi-sidebar-nav-collapsed .fi-sidebar-item-icon {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.fi-sidebar-nav-collapsed .fi-sidebar-item-active .fi-sidebar-item-icon {
+    color: #F5B731 !important;
+}
+
+/* ─── User Menu in Sidebar ─── */
+.fi-user-menu {
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ─── Global Search ─── */
+.fi-global-search-input {
+    border-radius: 12px !important;
+}
+
+/* ─── Tabs ─── */
+.fi-tabs-tab-active {
+    border-color: #F5B731 !important;
+    color: #1E2A45 !important;
+}
+
+/* ─── Account Widget ─── */
+.fi-account-widget {
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+    position: relative;
+}
+
+.fi-account-widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1E2A45 0%, #F5B731 50%, #A0522D 100%);
+    z-index: 10;
+}
+
+/* ═══════════════════════════════════════════════════════════
+    Dark Mode Overrides
+   ═══════════════════════════════════════════════════════════ */
+
+/* Background utama */
+.dark .fi-body {
+    background: #0F172A !important;
+}
+
+/* Topbar */
+.dark .fi-topbar {
+    background: #1E2A45 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Card / Section */
+.dark .fi-section {
+    background: #1E293B !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark .fi-section-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Stat widget dark mode */
+.dark .fi-wi-stats-overview-stat {
+    background: linear-gradient(145deg, #1E293B 0%, #1a2332 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .fi-wi-stats-overview-stat:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(245, 183, 49, 0.1) !important;
+}
+
+.dark .fi-wi-stats-overview-stat::before {
+    background: linear-gradient(135deg, rgba(245, 183, 49, 0.12), rgba(30, 42, 69, 0.08));
+}
+
+.dark .fi-wi-stats-overview-stat-value {
+    color: #FFFFFF !important;
+}
+
+.dark .fi-wi-stats-overview-stat-label {
+    color: #CBD5E1 !important;
+}
+
+.dark .fi-wi-stats-overview-stat-description {
+    color: #94A3B8 !important;
+}
+
+/* Stat card accent borders dark mode */
+.dark .stat-card-properti {
+    border-left: 4px solid #2A3A5C !important;
+}
+
+.dark .stat-card-kamar {
+    border-left: 4px solid #F5B731 !important;
+}
+
+.dark .stat-card-hunian {
+    border-left: 4px solid #C0724D !important;
+}
+
+.dark .stat-card-penghuni {
+    border-left: 4px solid #60A5FA !important;
+}
+
+.dark .stat-card-terlambat {
+    border-left: 4px solid #F87171 !important;
+}
+
+.dark .stat-card-pendapatan {
+    border-left: 4px solid #34D399 !important;
+}
+
+/* Chart widget dark mode */
+.dark .fi-wi-chart {
+    background: linear-gradient(145deg, #1E293B 0%, #1a2332 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .fi-wi-chart:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(245, 183, 49, 0.08) !important;
+}
+
+.dark .fi-wi-chart .fi-section-header {
+    background: linear-gradient(180deg, rgba(245, 183, 49, 0.03) 0%, transparent 100%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark .fi-wi-chart .fi-section-header-heading {
+    color: #FFFFFF !important;
+}
+
+.dark .fi-wi-chart .fi-section-header-description {
+    color: #94A3B8 !important;
+}
+
+/* Account widget dark mode */
+.dark .fi-account-widget {
+    background: linear-gradient(145deg, #1E293B 0%, #1a2332 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Tabel */
+.dark .fi-ta {
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark .fi-ta-header-cell {
+    background: #334155 !important;
+    color: #94a3b8 !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark .fi-ta-row:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.dark .fi-ta-row:hover {
+    background: rgba(245, 183, 49, 0.06) !important;
+}
+
+/* Modal */
+.dark .fi-modal-window {
+    background: #1E2A45 !important;
+}
+
+/* Auth pages */
+.dark .fi-simple-layout {
+    background: #0f172a !important;
+}
+
+.dark .fi-simple-main-ctn {
+    background: #1E293B !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Page title */
+.dark .fi-header-heading {
+    color: #F8FAFC !important;
+}
+
+/* Section header text in dark mode */
+.dark .fi-section-header-heading {
+    color: #F1F5F9 !important;
+}
+
+.dark .fi-section-header-description {
+    color: #94A3B8 !important;
+}
+
+/* Topbar user name / text in dark mode */
+.dark .fi-topbar nav {
+    color: #E2E8F0 !important;
+}
+
+/* Form labels in dark mode */
+.dark .fi-fo-field-wrp label {
+    color: #CBD5E1 !important;
+}
+
+/* Breadcrumbs in dark mode */
+.dark .fi-breadcrumbs li {
+    color: #94A3B8 !important;
+}
+
+.dark .fi-breadcrumbs a {
+    color: #CBD5E1 !important;
+}
+
+/* ─── General Text Readability & Logo in Dark Mode ─── */
+.dark .fi-logo,
+.dark .fi-sidebar-header a {
+    filter: drop-shadow(0 2px 12px rgba(255, 255, 255, 0.15)) brightness(1.2);
+}
+
+.dark .fi-ta-cell,
+.dark .fi-ta-text-item {
+    color: #F1F5F9 !important;
+}
+
+.dark .fi-empty-state-heading {
+    color: #F8FAFC !important;
+}
+
+.dark .fi-empty-state-description {
+    color: #CBD5E1 !important;
+}
+
+.dark .fi-input,
+.dark .fi-select-input {
+    color: #F8FAFC !important;
+    background-color: #1E293B !important;
+}
+
+.dark .fi-modal-heading {
+    color: #F8FAFC !important;
+}
+
+.dark .fi-modal-description {
+    color: #CBD5E1 !important;
+}
+
+.dark .fi-fieldset-legend {
+    color: #F1F5F9 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+    Reminder Pembayaran Widget
+   ═══════════════════════════════════════════════════════════ */
+
+/* Summary Cards */
+.reminder-summary-card {
+    backdrop-filter: blur(8px);
+}
+
+.dark .reminder-summary-card {
+    background: rgba(30, 41, 59, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Section Cards */
+.reminder-section-overdue,
+.reminder-section-upcoming {
+    backdrop-filter: blur(4px);
+}
+
+.dark .reminder-section-overdue {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+.dark .reminder-section-upcoming {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border-color: rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Row hover animation */
+.reminder-item {
+    position: relative;
+}
+
+.reminder-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.reminder-section-overdue .reminder-item::before {
+    background: linear-gradient(180deg, #ef4444, #dc2626);
+}
+
+.reminder-section-upcoming .reminder-item::before {
+    background: linear-gradient(180deg, #f59e0b, #d97706);
+}
+
+.reminder-item:hover::before {
+    opacity: 1;
+}

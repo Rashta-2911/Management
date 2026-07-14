@@ -1,0 +1,40 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+
+class UserSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $rolePemilik = Role::firstOrCreate(['name' => 'pemilik', 'guard_name' => 'web']);
+        $roleAdmin   = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+
+        
+        $rashta = User::firstOrCreate(
+            [
+                'email' => 'rashta2911@gmail.com',
+            ],
+            [
+                'nama'     => 'Rashta',
+                'password' => bcrypt('PojokHunian2020$'),
+            ]
+        );
+        $rashta->syncRoles('pemilik');
+
+        
+        $admin = User::firstOrCreate(
+            [
+                'email' => 'admin@example.com',
+            ],
+            [
+                'nama'     => 'Admin',
+                'password' => bcrypt('Admin123'),
+            ]
+        );
+        $admin->syncRoles('admin');
+    }
+}
