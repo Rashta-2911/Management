@@ -11,6 +11,8 @@ class ViewTipeKamar extends ViewRecord
 {
     protected static string $resource = TipeKamarResource::class;
 
+    protected ?string $heading = 'Data Tipe Kamar';
+
     #[Override]
     protected function getHeaderActions(): array
     {

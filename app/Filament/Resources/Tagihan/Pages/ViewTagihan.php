@@ -10,6 +10,8 @@ class ViewTagihan extends ViewRecord
 {
     protected static string $resource = TagihanResource::class;
 
+    protected ?string $heading = 'Data Tagihan';
+
     protected function getHeaderActions(): array
     {
         return [

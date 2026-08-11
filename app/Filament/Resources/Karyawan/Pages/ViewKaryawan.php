@@ -10,6 +10,8 @@ class ViewKaryawan extends ViewRecord
 {
     protected static string $resource = KaryawanResource::class;
 
+    protected ?string $heading = 'Data Karyawan';
+
     protected function getHeaderActions(): array
     {
         return [

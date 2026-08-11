@@ -31,6 +31,8 @@ class PenggajianResource extends Resource
 
     protected static ?string $slug = 'penggajian';
 
+    protected static ?string $title = 'Data Penggajian';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Kepegawaian';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

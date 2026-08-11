@@ -11,6 +11,8 @@ class ViewPembayaran extends ViewRecord
 {
     protected static string $resource = PembayaranResource::class;
 
+    protected ?string $heading = 'Data Pembayaran';
+
     public function getTitle(): string|Htmlable
     {
         return $this->getRecordTitle();

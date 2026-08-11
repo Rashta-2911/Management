@@ -12,6 +12,8 @@ class ViewProperti extends ViewRecord
 {
     protected static string $resource = PropertiResource::class;
 
+    protected ?string $heading = 'Data Properti';
+
     #[Override]
     protected function getHeaderActions(): array
     {

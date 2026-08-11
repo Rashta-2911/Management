@@ -10,6 +10,8 @@ class ViewSewa extends ViewRecord
 {
     protected static string $resource = SewaResource::class;
 
+    protected ?string $heading = 'Data Sewa';
+
     protected function getHeaderActions(): array
     {
         return [

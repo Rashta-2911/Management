@@ -12,6 +12,8 @@ class ViewKamar extends ViewRecord
 {
     protected static string $resource = KamarResource::class;
 
+    protected ?string $heading = 'Data Kamar';
+
     #[Override]
     protected function getHeaderActions(): array
     {

@@ -8,4 +8,6 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewPenghuni extends ViewRecord
 {
     protected static string $resource = PenghuniResource::class;
+
+    protected ?string $heading = 'Data Penghuni';
 }

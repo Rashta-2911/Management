@@ -11,6 +11,8 @@ class ViewPenggajian extends ViewRecord
 {
     protected static string $resource = PenggajianResource::class;
 
+    protected ?string $heading = 'Data Penggajian';
+
     #[Override]
     protected function getHeaderActions(): array
     {
