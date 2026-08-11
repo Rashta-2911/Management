@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Penghuni\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
+use App\Services\PropertiContext;
 use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class PenghuniForm
 {
@@ -27,7 +29,11 @@ class PenghuniForm
 
                                 Select::make('kamar_id')
                                     ->label('No. Kamar')
-                                    ->relationship('kamar', 'nomor_kamar')
+                                    ->relationship('kamar', 'nomor_kamar',
+                                        modifyQueryUsing: fn (Builder $query) => $query->whereHas('tipeKamar',
+                                            fn ($sq) => $sq->where('properti_id', app(PropertiContext::class)->currentId())
+                                        )
+                                    )
                                     ->preload()
                                     ->searchable()
                                     ->required()
@@ -41,6 +47,7 @@ class PenghuniForm
                                         'Lainnya' => 'Lainnya',
                                     ])
                                     ->required()
+                                    ->columnSpanFull()
                                     ->prefixIcon('heroicon-o-briefcase'),
                             ]),
                     ]),
@@ -55,13 +62,14 @@ class PenghuniForm
                                     ->label('No. Handphone (WhatsApp)')
                                     ->tel()
                                     ->rules(['regex:/^(0|62|\+62)[0-9]{9,13}$/'])
-                                    ->helperText('Format: 081234567890 atau 6281234567890')
+                                    ->placeholder('08XXXXXXXXXX')
                                     ->required()
                                     ->prefixIcon('heroicon-o-device-phone-mobile'),
 
                                 TextInput::make('email')
                                     ->label('Email')
                                     ->email()
+                                    ->placeholder('budi12@xxx.com')
                                     ->required()
                                     ->prefixIcon('heroicon-o-envelope'),
 

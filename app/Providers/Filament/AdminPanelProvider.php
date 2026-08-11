@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\AdminRegister;
+use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\Register;
 use App\Filament\Widgets\ReminderPembayaranWidget;
 use Filament\FontProviders\GoogleFontProvider;
@@ -15,7 +15,6 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Enums\MaxWidth;
 use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -39,19 +38,18 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->darkMode(true)
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->registration(AdminRegister::class)
-            ->profile(\App\Filament\Pages\Auth\EditProfile::class, isSimple: false)
+            ->profile(EditProfile::class, isSimple: false)
             ->authGuard('web')
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('17rem')
             ->registration(Register::class)
             ->colors([
                 'primary' => Color::hex('#F5B731'), // ✅ tetap, amber brand PojokHunian
-                'gray'    => Color::Zinc,           // ← Slate diganti Zinc, lebih warm/netral
-                'danger'  => Color::Rose,           // ✅ tetap
+                'gray' => Color::Zinc,           // ← Slate diganti Zinc, lebih warm/netral
+                'danger' => Color::Rose,           // ✅ tetap
                 'warning' => Color::Orange,         // ← Amber diganti Orange, beda dari primary
                 'success' => Color::Emerald,        // ✅ tetap
-                'info'    => Color::Sky,            // ← sedikit lebih lembut dari #3B82F6
+                'info' => Color::Sky,            // ← sedikit lebih lembut dari #3B82F6
             ])
             ->font('Plus Jakarta Sans', provider: GoogleFontProvider::class)
             ->navigationGroups([
@@ -64,15 +62,12 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('Keuangan')
                     ->icon('heroicon-o-banknotes')
                     ->collapsible(),
+                NavigationGroup::make('Kepegawaian')
+                    ->icon('heroicon-o-briefcase')
+                    ->collapsible(),
             ])
 
-            ->discoverResources(in: app_path('Filament/Resources/TipeKamar'), for: 'App\Filament\Resources\TipeKamar')
-            ->discoverResources(in: app_path('Filament/Resources/Kamar'), for: 'App\Filament\Resources\Kamar')
-            ->discoverResources(in: app_path('Filament/Resources/Properti'), for: 'App\Filament\Resources\Properti')
-            ->discoverResources(in: app_path('Filament/Resources/Penghuni'), for: 'App\Filament\Resources\Penghuni')
-            ->discoverResources(in: app_path('Filament/Resources/Sewa'), for: 'App\Filament\Resources\Sewa')
-            ->discoverResources(in: app_path('Filament/Resources/Tagihan'), for: 'App\Filament\Resources\Tagihan')
-            ->discoverResources(in: app_path('Filament/Resources/Pembayaran'), for: 'App\Filament\Resources\Pembayaran')
+            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
 
             ->pages([
@@ -99,6 +94,10 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::BODY_END,
                 fn (): string => Blade::render('<script src="{{ asset("js/chart-darkmode.js") }}"></script>'),
+            )
+            ->renderHook(
+                PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+                fn (): string => Blade::render('@livewire(\'properti-switcher\')'),
             );
     }
 }

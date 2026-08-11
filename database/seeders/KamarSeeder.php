@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class KamarSeeder extends Seeder
 {
-
     public function run(): void
     {
         DB::table('kamar')->insert([
@@ -20,8 +19,8 @@ class KamarSeeder extends Seeder
                 'tipe_sewa' => 'Bulanan',
                 'status' => 'Terisi',
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

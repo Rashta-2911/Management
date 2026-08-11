@@ -3,15 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class Properti extends Model
 {
     use SoftDeletes;
+
     protected $table = 'properti';
+
     protected $fillable = [
+        'pemilik_id',
         'nama_properti',
         'alamat',
         'jenis_properti',
@@ -21,25 +25,33 @@ class Properti extends Model
     ];
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
+            if (blank($model->pemilik_id)) {
+                $user = Auth::user();
+
+                if ($user) {
+                    $model->pemilik_id = $user->id;
+                }
+            }
 
             $prefix = 'PR';
 
-            $last = static::orderByRaw("CAST(SUBSTRING(id, 4) AS UNSIGNED) DESC", [])->first();
+            $last = static::orderByRaw('CAST(SUBSTRING(id, 4) AS UNSIGNED) DESC', [])->first();
 
-            if (!$last) {
-                $model->id = $prefix . '-0001';
+            if (! $last) {
+                $model->id = $prefix.'-0001';
                 return;
             }
 
-            $number = (int) str_replace($prefix . '-', '', $last->id);
+            $number = (int) str_replace($prefix.'-', '', $last->id);
 
-            $model->id = $prefix . '-' . str_pad($number + 1, 4, '0', STR_PAD_LEFT);
+            $model->id = $prefix.'-'.str_pad($number + 1, 4, '0', STR_PAD_LEFT);
         });
     }
 

@@ -9,6 +9,7 @@ use App\Filament\Resources\Pembayaran\Pages\ViewPembayaran;
 use App\Filament\Resources\Pembayaran\Schemas\PembayaranForm;
 use App\Filament\Resources\Pembayaran\Schemas\PembayaranInfolist;
 use App\Filament\Resources\Pembayaran\Tables\PembayaranTable;
+use App\Filament\Traits\HasPropertiAktifScope;
 use App\Models\Pembayaran;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -22,10 +23,16 @@ use Override;
 
 class PembayaranResource extends Resource
 {
+    use HasPropertiAktifScope;
+
     protected static ?string $model = Pembayaran::class;
+
     protected static ?string $slug = 'pembayaran';
+
     protected static ?string $pluralLabel = 'Pembayaran';
+
     protected static ?string $modelLabel = 'Pembayaran';
+
     protected static ?string $navigationLabel = 'Pembayaran';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Keuangan';
@@ -83,9 +90,19 @@ class PembayaranResource extends Resource
 
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
+        return static::applyPropertiAktifScope(
+            parent::getRecordRouteBindingEloquentQuery()->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ]),
+            'sewa.kamar.tipeKamar.properti_id'
+        );
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::applyPropertiAktifScope(
+            parent::getEloquentQuery(),
+            'sewa.kamar.tipeKamar.properti_id'
+        );
     }
 }

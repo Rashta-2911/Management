@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Penghuni extends Model
 {
     use SoftDeletes;
+
     protected $fillable = [
         'kamar_id',
         'nama_penghuni',
@@ -21,9 +22,11 @@ class Penghuni extends Model
         'alamat_asal',
         'status',
     ];
+
     protected $table = 'penghuni';
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected static function boot()
@@ -33,16 +36,17 @@ class Penghuni extends Model
 
             $prefix = 'P';
 
-            $last = static::orderByRaw("CAST(SUBSTRING(id, 5) AS UNSIGNED) DESC", [])->first();
+            $last = static::orderByRaw('CAST(SUBSTRING(id, 5) AS UNSIGNED) DESC', [])->first();
 
-            if (!$last) {
-                $model->id = $prefix . '-0001';
+            if (! $last) {
+                $model->id = $prefix.'-0001';
+
                 return;
             }
 
-            $number = (int) str_replace($prefix . '-', '', $last->id);
+            $number = (int) str_replace($prefix.'-', '', $last->id);
 
-            $model->id = $prefix . '-' . str_pad($number + 1, 4, '0', STR_PAD_LEFT);
+            $model->id = $prefix.'-'.str_pad($number + 1, 4, '0', STR_PAD_LEFT);
         });
     }
 
@@ -53,9 +57,9 @@ class Penghuni extends Model
                 $nomor = preg_replace('/\D/', '', $this->no_hp);
 
                 if (str_starts_with($nomor, '0')) {
-                    $nomor = '62' . substr($nomor, 1);
-                } elseif (!str_starts_with($nomor, '62')) {
-                    $nomor = '62' . $nomor;
+                    $nomor = '62'.substr($nomor, 1);
+                } elseif (! str_starts_with($nomor, '62')) {
+                    $nomor = '62'.$nomor;
                 }
 
                 return $nomor;
@@ -66,6 +70,7 @@ class Penghuni extends Model
     public function hasValidNoHp(): bool
     {
         $nomor = preg_replace('/\D/', '', $this->no_hp ?? '');
+
         return strlen($nomor) >= 10;
     }
 
@@ -76,7 +81,7 @@ class Penghuni extends Model
 
     public function kamar(): BelongsTo
     {
-    return $this->belongsTo(Kamar::class, 'kamar_id');
+        return $this->belongsTo(Kamar::class, 'kamar_id');
     }
 
     public function sewaAktif(): HasOne
@@ -93,6 +98,6 @@ class Penghuni extends Model
             'id',
             'id',
             'kamar_id'
-        )-> where('sewa.status', 'Aktif');
+        )->where('sewa.status', 'Aktif');
     }
 }

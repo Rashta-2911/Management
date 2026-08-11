@@ -19,7 +19,7 @@ class ViewProperti extends ViewRecord
             return [];
         }
 
-        return[
+        return [
             EditAction::make(),
         ];
     }

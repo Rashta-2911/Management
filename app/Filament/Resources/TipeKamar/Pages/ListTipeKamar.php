@@ -12,7 +12,7 @@ class ListTipeKamar extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        if (!TipeKamarResource::canCreate()) {
+        if (! TipeKamarResource::canCreate()) {
             return [];
         }
 

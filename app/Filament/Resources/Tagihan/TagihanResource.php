@@ -9,24 +9,27 @@ use App\Filament\Resources\Tagihan\Pages\ViewTagihan;
 use App\Filament\Resources\Tagihan\Schemas\TagihanForm;
 use App\Filament\Resources\Tagihan\Schemas\TagihanInfolist;
 use App\Filament\Resources\Tagihan\Tables\TagihanTable;
+use App\Filament\Traits\HasPropertiAktifScope;
 use App\Models\Tagihan;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Override;
 
 class TagihanResource extends Resource
 {
+    use HasPropertiAktifScope;
+
     protected static ?string $model = Tagihan::class;
+
     protected static ?string $slug = 'tagihan';
+
     protected static ?string $navigationLabel = 'Tagihan';
+
     protected static ?string $pluralLabel = 'Tagihan';
-    
 
     protected static string|\UnitEnum|null $navigationGroup = 'Keuangan';
 
@@ -76,9 +79,19 @@ class TagihanResource extends Resource
 
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
+        return static::applyPropertiAktifScope(
+            parent::getRecordRouteBindingEloquentQuery()->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ]),
+            'sewa.kamar.tipeKamar.properti_id'
+        );
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::applyPropertiAktifScope(
+            parent::getEloquentQuery(),
+            'sewa.kamar.tipeKamar.properti_id'
+        );
     }
 }

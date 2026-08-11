@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\TipeKamar\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
+use App\Services\PropertiContext;
 use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
-use App\Models\Properti;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class TipeKamarForm
 {
@@ -23,9 +24,14 @@ class TipeKamarForm
                             ->schema([
                                 Select::make('properti_id')
                                     ->label('Properti')
-                                    ->options(Properti::all()->pluck('nama_properti', 'id'))
+                                    ->options(function () {
+                                        return app(PropertiContext::class)->availableFor(Auth::user())
+                                            ->pluck('nama_properti', 'id');
+                                    })
+                                    ->default(fn () => app(PropertiContext::class)->currentId())
                                     ->searchable()
                                     ->required()
+                                    ->hiddenOn('create')
                                     ->prefixIcon('heroicon-o-building-office-2'),
 
                                 TextInput::make('nama_tipe')
@@ -41,7 +47,7 @@ class TipeKamarForm
                                     ->suffix('orang')
                                     ->required()
                                     ->prefixIcon('heroicon-o-users'),
-                                    
+
                                 TextInput::make('luas_kamar')
                                     ->label('Luas Kamar (m²)')
                                     ->numeric()
@@ -66,7 +72,7 @@ class TipeKamarForm
                                     ])
                                     ->required()
                                     ->prefixIcon('heroicon-o-calendar-days'),
-                                    
+
                                 TextInput::make('harga')
                                     ->label('Harga')
                                     ->numeric()

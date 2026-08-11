@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Properti\Schemas;
 
-use Filament\Schemas\Schema;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
 
 class PropertiInfolist
@@ -68,9 +68,7 @@ class PropertiInfolist
                 Section::make('Riwayat Pencatatan')
                     ->description('Waktu data ini dibuat dan terakhir diperbarui')
                     ->icon('heroicon-o-clock')
-                    ->columns(2)
-                    ->collapsible()
-                    ->collapsed()
+                    ->columns(1)
                     ->schema([
                         TextEntry::make('created_at')
                             ->label('Dibuat Pada')

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
     public function up(): void
     {
         Schema::create('pembayaran', function (Blueprint $table) {
@@ -18,9 +17,10 @@ return new class extends Migration
             $table->decimal('jumlah', 10, 2);
             $table->enum('status', ['Lunas']);
             $table->string('bukti_pembayaran')->nullable();
+
             $table->foreign('sewa_id')->references('id')->on('sewa');
             $table->foreign('tagihan_id')->references('id')->on('tagihan')->nullOnDelete();
-            
+
             $table->timestamps();
             $table->softDeletes();
         });

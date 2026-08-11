@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Filament\Forms\Components\Section;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,8 +12,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if (! class_exists(\Filament\Forms\Components\Section::class, false)) {
-            class_alias(\Filament\Schemas\Components\Section::class, \Filament\Forms\Components\Section::class);
+        if (! class_exists(Section::class, false)) {
+            class_alias(\Filament\Schemas\Components\Section::class, Section::class);
         }
     }
 

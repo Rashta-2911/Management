@@ -22,13 +22,13 @@ class KamarInfolist
                             ->label('No. Kamar')
                             ->icon('heroicon-o-key')
                             ->weight(FontWeight::Bold)
-                            ->size('lg'),
+                            ->size('md'),
 
                         TextEntry::make('status')
                             ->label('Status Kamar')
                             ->icon('heroicon-o-check-circle')
                             ->badge()
-                            ->size('lg')
+                            ->size('md')
                             ->color(fn (string $state): string => match ($state) {
                                 'Tersedia' => 'success',
                                 'Terisi' => 'danger',
@@ -45,19 +45,18 @@ class KamarInfolist
                         TextEntry::make('tipeKamar.harga')
                             ->label('Harga/bulan')
                             ->icon('heroicon-o-banknotes')
-                            ->money('IDR')
+                            ->money('Rp')
+                            ->formatStateUsing(fn ($state) => 'Rp '.number_format($state, 0, ',', '.'))
                             ->weight(FontWeight::Bold)
                             ->color('success')
-                            ->size('lg')
+                            ->size('md')
                             ->placeholder('-'),
                     ]),
 
                 Section::make('Riwayat Pencatatan')
                     ->description('Waktu data ini dibuat dan terakhir diperbarui')
                     ->icon('heroicon-o-clock')
-                    ->columns(2)
-                    ->collapsible()
-                    ->collapsed()
+                    ->columns(1)
                     ->schema([
                         TextEntry::make('created_at')
                             ->label('Dibuat pada')

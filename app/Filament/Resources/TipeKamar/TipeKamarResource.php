@@ -9,21 +9,25 @@ use App\Filament\Resources\TipeKamar\Pages\ViewTipeKamar;
 use App\Filament\Resources\TipeKamar\Schemas\TipeKamarForm;
 use App\Filament\Resources\TipeKamar\Schemas\TipeKamarInfolist;
 use App\Filament\Resources\TipeKamar\Tables\TipeKamarTable;
+use App\Filament\Traits\HasPropertiAktifScope;
 use App\Models\TipeKamar;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
-use Override;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class TipeKamarResource extends Resource
 {
+    use HasPropertiAktifScope;
+
     protected static ?string $model = TipeKamar::class;
+
     protected static ?string $slug = 'tipe_kamar';
 
     protected static ?string $navigationLabel = 'Tipe Kamar';
+
     protected static ?string $modelLabel = 'TipeKamar';
+
     protected static ?string $pluralModelLabel = 'Tipe Kamar';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Properti';
@@ -32,7 +36,7 @@ class TipeKamarResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $recordTitleAttribute = 'Tipe Kamar';
+    protected static ?string $recordTitleAttribute = 'nama_tipe';
 
     public static function infolist(Schema $schema): Schema
     {
@@ -49,10 +53,9 @@ class TipeKamarResource extends Resource
         return TipeKamarTable::configure($table);
     }
 
-    
     public static function getGloballySearchableAttributes(): array
     {
-    return ['nama_tipe'];
+        return ['nama_tipe'];
     }
 
     public static function getRelations(): array
@@ -71,6 +74,12 @@ class TipeKamarResource extends Resource
             'edit' => EditTipeKamar::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::applyPropertiAktifScope(
+            parent::getEloquentQuery(),
+            'properti_id'
+        );
+    }
 }
-
-

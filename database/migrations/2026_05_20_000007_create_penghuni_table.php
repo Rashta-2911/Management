@@ -6,16 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('penghuni', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('kamar_id');
             $table->string('nama_penghuni');
-            $table->string('no_hp');
+            $table->string('no_hp', 15);
             $table->string('email');
             $table->string('alamat_asal');
             $table->enum('status', ['Mahasiswa', 'Pekerja', 'Lainnya']);
@@ -25,12 +22,8 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('penghuni');

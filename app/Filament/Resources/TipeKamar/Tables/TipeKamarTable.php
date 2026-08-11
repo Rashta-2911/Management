@@ -8,9 +8,10 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class TipeKamarTable
 {
@@ -24,7 +25,7 @@ class TipeKamarTable
                         return $query->orderByRaw("CAST(SUBSTRING(id, 2) AS UNSIGNED) $direction");
                     })
                     ->toggleable(isToggledHiddenByDefault: true),
-                    
+
                 TextColumn::make('properti.nama_properti')
                     ->label('Properti')
                     ->sortable()
@@ -37,7 +38,7 @@ class TipeKamarTable
                     ->searchable()
                     ->weight('bold')
                     ->icon('heroicon-o-tag'),
-                    
+
                 TextColumn::make('tipe_sewa')
                     ->label('Tipe Sewa')
                     ->badge()
@@ -46,7 +47,7 @@ class TipeKamarTable
                 TextColumn::make('harga')
                     ->label('Harga')
                     ->money('Rp')
-                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.'))
+                    ->formatStateUsing(fn ($state) => 'Rp '.number_format($state, 0, ',', '.'))
                     ->sortable()
                     ->searchable()
                     ->weight('bold')
@@ -91,7 +92,7 @@ class TipeKamarTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                TrashedFilter::make()
+                TrashedFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()
@@ -106,7 +107,7 @@ class TipeKamarTable
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
-                ]),
+                ])->visible(fn () => ! Auth::user()?->hasRole('pemilik')),
             ]);
     }
 }

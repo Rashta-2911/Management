@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Sewa\Schemas;
 
-use Filament\Schemas\Schema;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
 
 class SewaInfolist
@@ -81,8 +81,6 @@ class SewaInfolist
                     ->description('Waktu data ini dibuat dan terakhir diperbarui')
                     ->icon('heroicon-o-clock')
                     ->columns(2)
-                    ->collapsible()
-                    ->collapsed()
                     ->schema([
                         TextEntry::make('created_at')
                             ->label('Dibuat pada')

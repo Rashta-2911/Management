@@ -9,24 +9,29 @@ use App\Filament\Resources\Kamar\Pages\ViewKamar;
 use App\Filament\Resources\Kamar\Schemas\KamarForm;
 use App\Filament\Resources\Kamar\Schemas\KamarInfolist;
 use App\Filament\Resources\Kamar\Tables\KamarTable;
+use App\Filament\Traits\HasPropertiAktifScope;
 use App\Models\Kamar;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Override;
-use Illuminate\Contracts\Support\Htmlable;
 
 class KamarResource extends Resource
 {
+    use HasPropertiAktifScope;
+
     protected static ?string $model = Kamar::class;
 
     protected static ?string $slug = 'kamar';
 
     protected static ?string $navigationLabel = 'Kamar';
+
     protected static ?string $pluralLabel = 'Kamar';
+
     protected static ?string $modelLabel = 'Kamar';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-key';
@@ -35,13 +40,13 @@ class KamarResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Properti';
 
-    protected static ?string $recordTitleAttribute = null; //Penamaan judul halaman edit yang diambil dari Attribute model.
+    protected static ?string $recordTitleAttribute = null; // Penamaan judul halaman edit yang diambil dari Attribute model.
 
     public static function infolist(Schema $schema): Schema
     {
         return KamarInfolist::configure($schema);
     }
-    
+
     public static function form(Schema $schema): Schema
     {
         return KamarForm::configure($schema);
@@ -89,9 +94,19 @@ class KamarResource extends Resource
 
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
+        return static::applyPropertiAktifScope(
+            parent::getRecordRouteBindingEloquentQuery()->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ]),
+            'tipeKamar.properti_id'
+        );
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::applyPropertiAktifScope(
+            parent::getEloquentQuery(),
+            'tipeKamar.properti_id'
+        );
     }
 }

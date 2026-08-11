@@ -9,24 +9,28 @@ use App\Filament\Resources\Sewa\Pages\ViewSewa;
 use App\Filament\Resources\Sewa\Schemas\SewaForm;
 use App\Filament\Resources\Sewa\Schemas\SewaInfolist;
 use App\Filament\Resources\Sewa\Tables\SewaTable;
+use App\Filament\Traits\HasPropertiAktifScope;
 use App\Models\Sewa;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Override;
-use Illuminate\Support\Facades\Auth;
 
 class SewaResource extends Resource
 {
+    use HasPropertiAktifScope;
+
     protected static ?string $model = Sewa::class;
+
     protected static ?string $slug = 'sewa';
+
     protected static ?string $navigationLabel = 'Sewa';
+
     protected static ?string $pluralLabel = 'Sewa';
+
     protected static ?string $modelLabel = 'Sewa';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Kelola Penghuni';
@@ -77,9 +81,19 @@ class SewaResource extends Resource
 
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
+        return static::applyPropertiAktifScope(
+            parent::getRecordRouteBindingEloquentQuery()->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ]),
+            'kamar.tipeKamar.properti_id'
+        );
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::applyPropertiAktifScope(
+            parent::getEloquentQuery(),
+            'kamar.tipeKamar.properti_id'
+        );
     }
 }

@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TipeKamar extends Model
 {
     use SoftDeletes;
+
     protected $table = 'tipe_kamar';
+
     protected $fillable = [
         'properti_id',
         'nama_tipe',
@@ -20,7 +22,9 @@ class TipeKamar extends Model
         'harga',
         'tipe_sewa',
     ];
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected static function boot()
@@ -30,16 +34,17 @@ class TipeKamar extends Model
 
             $prefix = 'TK';
 
-            $last = static::orderByRaw("CAST(SUBSTRING(id, 5) AS UNSIGNED) DESC", [])->first();
+            $last = static::orderByRaw('CAST(SUBSTRING(id, 5) AS UNSIGNED) DESC', [])->first();
 
-            if (!$last) {
-                $model->id = $prefix . '-0001';
+            if (! $last) {
+                $model->id = $prefix.'-0001';
+
                 return;
             }
 
-            $number = (int) str_replace($prefix . '-', '', $last->id);
+            $number = (int) str_replace($prefix.'-', '', $last->id);
 
-            $model->id = $prefix . '-' . str_pad($number + 1, 4, '0', STR_PAD_LEFT);
+            $model->id = $prefix.'-'.str_pad($number + 1, 4, '0', STR_PAD_LEFT);
         });
     }
 

@@ -12,9 +12,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Kamar extends Model
 {
     use SoftDeletes;
+
     protected $table = 'kamar';
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -31,23 +33,24 @@ class Kamar extends Model
 
             $prefix = 'KMR';
 
-            $last = static::orderByRaw("CAST(SUBSTRING(id, 5) AS UNSIGNED) DESC", [])->first();
+            $last = static::orderByRaw('CAST(SUBSTRING(id, 5) AS UNSIGNED) DESC', [])->first();
 
-            if (!$last) {
-                $model->id = $prefix . '-0001';
+            if (! $last) {
+                $model->id = $prefix.'-0001';
+
                 return;
             }
 
-            $number = (int) str_replace($prefix . '-', '', $last->id);
+            $number = (int) str_replace($prefix.'-', '', $last->id);
 
-            $model->id = $prefix . '-' . str_pad($number + 1, 4, '0', STR_PAD_LEFT);
+            $model->id = $prefix.'-'.str_pad($number + 1, 4, '0', STR_PAD_LEFT);
         });
     }
 
     protected function kamarLabel(): Attribute
     {
         return Attribute::make(
-            get: fn () => 'Kamar ' . $this->nomor_kamar,
+            get: fn () => 'Kamar '.$this->nomor_kamar,
         );
     }
 

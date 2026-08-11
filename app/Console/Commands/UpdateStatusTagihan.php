@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Tagihan;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
-use App\Models\Tagihan;
 use Illuminate\Console\Command;
 
 #[Signature('app:update-status-tagihan')]
@@ -12,6 +12,7 @@ use Illuminate\Console\Command;
 class UpdateStatusTagihan extends Command
 {
     protected $signature = 'tagihan:update-status';
+
     protected $description = 'Ubah status tagihan yang melewati jatuh tempo menjadi Terlambat';
 
     public function handle(): void

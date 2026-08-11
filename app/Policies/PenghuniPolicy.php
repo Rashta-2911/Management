@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Penghuni;
 use Illuminate\Database\Eloquent\Model;
 
 class PenghuniPolicy extends BaseOwnershipPolicy

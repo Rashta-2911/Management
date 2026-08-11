@@ -2,10 +2,10 @@
 
 namespace App\Filament\Pages\Auth;
 
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Schema;
 use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
 use Override;
 
 class EditProfile extends BaseEditProfile

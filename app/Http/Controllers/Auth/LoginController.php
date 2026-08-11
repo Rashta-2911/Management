@@ -23,27 +23,29 @@ class LoginController extends Controller
 
             $user = Auth::user();
 
-            $selectedRole= $request->input('role');
+            $selectedRole = $request->input('role');
 
-            if (!$user->hasRole($selectedRole)) {
-            Auth::logout();
-            return back()->withErrors([
-                'email' => 'Akun ini tidak memiliki akses sebagai ' . $selectedRole . '.'
-            ])->withInput($request->only('email'));
-        }
+            if (! $user->hasRole($selectedRole)) {
+                Auth::logout();
+
+                return back()->withErrors([
+                    'email' => 'Akun ini tidak memiliki akses sebagai '.$selectedRole.'.',
+                ])->withInput($request->only('email'));
+            }
 
             if ($user->hasRole('admin')) {
                 return redirect('/admin');
             } elseif ($user->hasRole('pemilik')) {
                 return redirect('/admin');
             }
-            
+
             Auth::logout();
+
             return back()->withErrors(['email' => 'Akun tidak memiliki akses']);
         }
 
         return back()->withErrors([
-            'email' => 'Email atau kata sandi salah.'
+            'email' => 'Email atau kata sandi salah.',
         ])->withInput($request->only('email'));
     }
 
@@ -52,17 +54,18 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/');
     }
 
     public function showLoginForm()
     {
-    if (Auth::check()) {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-    }
+        if (Auth::check()) {
+            Auth::logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+        }
 
-    return view('login');
-}
+        return view('login');
+    }
 }

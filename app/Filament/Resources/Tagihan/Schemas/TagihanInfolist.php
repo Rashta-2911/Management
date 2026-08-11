@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Tagihan\Schemas;
 
-use Filament\Schemas\Schema;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
 
 class TagihanInfolist
@@ -99,8 +99,6 @@ class TagihanInfolist
                     ->icon('heroicon-o-clock')
                     ->columns(2)
                     ->columnSpanFull()
-                    ->collapsible()
-                    ->collapsed()
                     ->schema([
                         TextEntry::make('created_at')
                             ->label('Dibuat Pada')

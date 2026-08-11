@@ -2,14 +2,16 @@
 
 namespace App\Filament\Resources\Tagihan\Schemas;
 
+use App\Models\Sewa;
+use App\Services\PropertiContext;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Grid;
-use App\Models\Sewa;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 
 class TagihanForm
 {
@@ -25,20 +27,23 @@ class TagihanForm
                             ->schema([
                                 Select::make('sewa_id')
                                     ->label('Pilih Sewa Aktif')
-                                    ->options(
-                                        Sewa::with(['penghuni', 'kamar'])
+                                    ->options(function () {
+                                        $propertiId = app(PropertiContext::class)->currentId();
+
+                                        return Sewa::with(['penghuni', 'kamar'])
                                             ->where('status', 'Aktif')
+                                            ->whereHas('kamar.tipeKamar', fn ($q) => $q->where('properti_id', $propertiId))
                                             ->get()
                                             ->mapWithKeys(fn ($sewa) => [
                                                 $sewa->id => "{$sewa->penghuni->nama_penghuni} — Kamar {$sewa->kamar->nomor_kamar}",
-                                            ])
-                                    )
+                                            ]);
+                                    })
                                     ->searchable()
                                     ->preload()
                                     ->required()
-                                    ->reactive()
+                                    ->live()
                                     ->prefixIcon('heroicon-o-document-text')
-                                    ->afterStateUpdated(function ($state, callable $set) {
+                                    ->afterStateUpdated(function ($state, Set $set) {
                                         if ($state) {
                                             $sewa = Sewa::find($state);
                                             $set('jumlah', $sewa?->harga_disepakati);
@@ -57,7 +62,7 @@ class TagihanForm
                     ->description('Pengaturan jadwal dan status pembayaran')
                     ->icon('heroicon-o-calendar-days')
                     ->schema([
-                        Grid::make(3)
+                        Grid::make(2)
                             ->schema([
                                 DatePicker::make('tanggal_tagihan')
                                     ->label('Tanggal Tagihan')
@@ -85,11 +90,11 @@ class TagihanForm
                     ]),
 
                 Section::make('Catatan Tambahan')
+                    ->columnSpanFull()
                     ->schema([
                         Textarea::make('catatan')
                             ->label('Catatan')
                             ->nullable()
-                            ->columnSpanFull()
                             ->rows(3),
                     ]),
             ]);

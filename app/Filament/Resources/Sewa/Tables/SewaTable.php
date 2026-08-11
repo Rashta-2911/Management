@@ -11,6 +11,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class SewaTable
 {
@@ -24,7 +25,7 @@ class SewaTable
                         return $query->orderByRaw("CAST(SUBSTRING(id, 2) AS UNSIGNED) $direction");
                     })
                     ->toggleable(isToggledHiddenByDefault: true),
-                    
+
                 TextColumn::make('kamar.nomor_kamar')
                     ->label('No. Kamar')
                     ->badge()
@@ -48,7 +49,7 @@ class SewaTable
                 TextColumn::make('harga_disepakati')
                     ->label('Harga')
                     ->money('Rp')
-                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.'))
+                    ->formatStateUsing(fn ($state) => 'Rp '.number_format($state, 0, ',', '.'))
                     ->color('success')
                     ->weight('bold')
                     ->sortable(),
@@ -62,10 +63,10 @@ class SewaTable
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'Aktif'      => 'success',
-                        'Selesai'    => 'gray',
+                        'Aktif' => 'success',
+                        'Selesai' => 'gray',
                         'Dibatalkan' => 'danger',
-                        default      => 'gray',
+                        default => 'gray',
                     }),
             ])
             ->filters([
@@ -84,7 +85,7 @@ class SewaTable
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
-                ]),
+                ])->visible(fn () => ! Auth::user()?->hasRole('pemilik')),
             ]);
     }
 }

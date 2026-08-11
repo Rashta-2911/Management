@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Tagihan;
 use Illuminate\Database\Eloquent\Model;
 
 class TagihanPolicy extends BaseOwnershipPolicy

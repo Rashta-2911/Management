@@ -8,6 +8,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 
 class PembayaranInfolist
@@ -72,23 +73,23 @@ class PembayaranInfolist
                     ->columnSpanFull()
                     ->headerActions([
                         Action::make('lihat_bukti_penuh')
-                    ->label('Lihat Ukuran Penuh')
-                    ->icon('heroicon-o-arrows-pointing-out')
-                    ->color('gray')
-                    ->url(function ($record) {
-                        if (! $record->bukti_pembayaran) {
-                            return null;
-                        }
+                            ->label('Lihat Ukuran Penuh')
+                            ->icon('heroicon-o-arrows-pointing-out')
+                            ->color('gray')
+                            ->url(function ($record) {
+                                if (! $record->bukti_pembayaran) {
+                                    return null;
+                                }
 
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
-                        $disk = Storage::disk('public');
+                                /** @var FilesystemAdapter $disk */
+                                $disk = Storage::disk('public');
 
-                        return $disk->url($record->bukti_pembayaran);
-                    })
-                    ->openUrlInNewTab()
-                    ->visible(fn ($record) => filled($record->bukti_pembayaran)),
-                                    ])
-                                    ->schema([
+                                return $disk->url($record->bukti_pembayaran);
+                            })
+                            ->openUrlInNewTab()
+                            ->visible(fn ($record) => filled($record->bukti_pembayaran)),
+                    ])
+                    ->schema([
                         ImageEntry::make('bukti_pembayaran')
                             ->label('')
                             ->disk('public')
@@ -106,8 +107,6 @@ class PembayaranInfolist
                     ->icon('heroicon-o-identification')
                     ->columns(3)
                     ->columnSpanFull()
-                    ->collapsible()
-                    ->collapsed()
                     ->schema([
                         TextEntry::make('id')
                             ->label('ID Pembayaran')

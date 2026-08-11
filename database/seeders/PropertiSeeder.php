@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class PropertiSeeder extends Seeder
 {
-
     public function run(): void
     {
         DB::table('properti')->insert([
@@ -18,7 +17,7 @@ class PropertiSeeder extends Seeder
                 'kontak_pemilik' => '082255074780',
                 'fasilitas_umum' => 'Kamar mandi dalam & kitchen set',
                 'peraturan' => 'Dilarang merokok, Dilarang membawa hewan peliharaan',
-            ]
+            ],
         ]);
     }
 }

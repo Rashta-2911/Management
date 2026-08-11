@@ -3,18 +3,20 @@
 namespace App\Services;
 
 use App\Models\Tagihan;
+use Carbon\Carbon;
 
 class WhatsappReminderService
 {
     public static function buatLinkReminder(Tagihan $tagihan): ?string
     {
         $penghuni = $tagihan->sewa->penghuni;
-        if (!$penghuni || !$penghuni->hasValidNoHp()) {
+        if (! $penghuni || ! $penghuni->hasValidNoHp()) {
             return null;
         }
         $kamar = $tagihan->sewa->kamar;
         $pesan = self::buatTeksPesan($tagihan, $penghuni, $kamar);
-        return "https://wa.me/{$penghuni->no_hp_wa}?text=" . urlencode($pesan);
+
+        return "https://wa.me/{$penghuni->no_hp_wa}?text=".urlencode($pesan);
     }
 
     protected static function buatTeksPesan(Tagihan $tagihan, $penghuni, $kamar): string
@@ -25,14 +27,14 @@ class WhatsappReminderService
             default => '',
         };
 
-        $jatuhTempo = \Carbon\Carbon::parse($tagihan->tanggal_jatuh_tempo)->translatedFormat('d F Y');
+        $jatuhTempo = Carbon::parse($tagihan->tanggal_jatuh_tempo)->translatedFormat('d F Y');
 
         return "Halo {$penghuni->nama_penghuni},\n\n"
-            . "{$statusText}\n\n"
-            . "Detail Tagihan:\n"
-            . "Kamar: {$kamar->nomor_kamar}\n"
-            . "Jatuh tempo: {$jatuhTempo}\n"
-            . "Jumlah: Rp " . number_format($tagihan->jumlah, 0, ',', '.') . "\n\n"
-            . "Silakan lakukan pembayaran secepatnya. Terima kasih.";
+            ."{$statusText}\n\n"
+            ."Detail Tagihan:\n"
+            ."Kamar: {$kamar->nomor_kamar}\n"
+            ."Jatuh tempo: {$jatuhTempo}\n"
+            .'Jumlah: Rp '.number_format($tagihan->jumlah, 0, ',', '.')."\n\n"
+            .'Silakan lakukan pembayaran secepatnya. Terima kasih.';
     }
 }

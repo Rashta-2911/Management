@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('tanggal_jatuh_tempo');
             $table->enum('status', ['Belum lunas', 'Lunas', 'Terlambat']);
             $table->text('catatan')->nullable();
+
             $table->foreign('sewa_id')->references('id')->on('sewa')->restrictOnDelete();
 
             $table->timestamps();

@@ -3,26 +3,33 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Tagihan;
+use App\Services\PropertiContext;
 use Filament\Widgets\ChartWidget;
 
 class TagihanChart extends ChartWidget
 {
     protected ?string $heading = 'Status Tagihan';
+
     protected ?string $description = 'Distribusi status seluruh tagihan';
+
     protected ?string $maxHeight = '300px';
+
     protected static ?int $sort = 3;
 
     protected function getData(): array
     {
-        $lunas      = Tagihan::where('status', '=', 'Lunas', 'and')->count();
-        $belumLunas = Tagihan::where('status', '=', 'Belum lunas', 'and')->count();
-        $terlambat  = Tagihan::where('status', '=', 'Terlambat', 'and')->count();
+        $propertiId = app(PropertiContext::class)->currentId();
+        $qTagihan = Tagihan::when($propertiId, fn ($q, $id) => $q->whereHas('sewa.kamar.tipeKamar', fn ($sq) => $sq->where('properti_id', $id)));
+
+        $lunas = (clone $qTagihan)->where('status', '=', 'Lunas')->count();
+        $belumLunas = (clone $qTagihan)->where('status', '=', 'Belum lunas')->count();
+        $terlambat = (clone $qTagihan)->where('status', '=', 'Terlambat')->count();
 
         return [
             'datasets' => [
                 [
-                    'label'           => 'Jumlah Tagihan',
-                    'data'            => [$lunas, $belumLunas, $terlambat],
+                    'label' => 'Jumlah Tagihan',
+                    'data' => [$lunas, $belumLunas, $terlambat],
                     'backgroundColor' => [
                         '#F5B731',  // Gold — Lunas
                         '#1E2A45',  // Navy — Belum Lunas
@@ -33,9 +40,9 @@ class TagihanChart extends ChartWidget
                         '#2A3A5C',  // Lighter Navy
                         '#8B4726',  // Darker Brick
                     ],
-                    'borderWidth'     => 0,
-                    'borderRadius'    => 8,
-                    'borderSkipped'   => false,
+                    'borderWidth' => 0,
+                    'borderRadius' => 8,
+                    'borderSkipped' => false,
                 ],
             ],
             'labels' => ['Lunas', 'Belum Lunas', 'Terlambat'],
@@ -79,7 +86,7 @@ class TagihanChart extends ChartWidget
                     'beginAtZero' => true,
                     'ticks' => [
                         'stepSize' => 1,
-                        'font'     => ['size' => 11],
+                        'font' => ['size' => 11],
                     ],
                     'grid' => [
                         'drawBorder' => false,

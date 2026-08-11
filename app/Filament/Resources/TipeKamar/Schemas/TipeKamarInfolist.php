@@ -22,15 +22,16 @@ class TipeKamarInfolist
                             ->label('Nama Tipe Kamar')
                             ->icon('heroicon-o-building-office-2')
                             ->weight(FontWeight::Bold)
-                            ->size('lg')
+                            ->size('md')
                             ->placeholder('-'),
 
                         TextEntry::make('harga')
                             ->label('Harga/bulan')
                             ->icon('heroicon-o-banknotes')
-                            ->money('IDR')
+                            ->money('Rp')
+                            ->formatStateUsing(fn ($state) => 'Rp '.number_format($state, 0, ',', '.'))
                             ->weight(FontWeight::Bold)
-                            ->size('lg')
+                            ->size('md')
                             ->color('success')
                             ->placeholder('-'),
 
@@ -58,8 +59,6 @@ class TipeKamarInfolist
                     ->description('Waktu data ini dibuat dan terakhir diperbarui')
                     ->icon('heroicon-o-clock')
                     ->columns(2)
-                    ->collapsible()
-                    ->collapsed()
                     ->schema([
                         TextEntry::make('created_at')
                             ->label('Dibuat pada')

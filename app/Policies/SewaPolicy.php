@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Sewa;
 use Illuminate\Database\Eloquent\Model;
 
 class SewaPolicy extends BaseOwnershipPolicy

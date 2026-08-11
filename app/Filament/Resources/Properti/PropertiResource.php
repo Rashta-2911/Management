@@ -5,17 +5,15 @@ namespace App\Filament\Resources\Properti;
 use App\Filament\Resources\Properti\Pages\CreateProperti;
 use App\Filament\Resources\Properti\Pages\EditProperti;
 use App\Filament\Resources\Properti\Pages\ListProperti;
+use App\Filament\Resources\Properti\Pages\ViewProperti;
 use App\Filament\Resources\Properti\Schemas\PropertiForm;
+use App\Filament\Resources\Properti\Schemas\PropertiInfolist;
 use App\Filament\Resources\Properti\Tables\PropertiTable;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Properti;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Model;
-use App\Filament\Resources\Properti\Pages\ViewProperti;
-use App\Filament\Resources\Properti\Schemas\PropertiInfolist;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 class PropertiResource extends Resource
@@ -25,8 +23,11 @@ class PropertiResource extends Resource
     protected static ?string $slug = 'properti';
 
     protected static ?string $recordTitleAttribute = 'Properti';
+
     protected static ?string $pluralLabel = 'Properti';
+
     protected static ?string $navigationLabel = 'Properti';
+
     protected static ?string $modelLabel = 'Properti';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Properti';
@@ -50,6 +51,18 @@ class PropertiResource extends Resource
         return PropertiTable::configure($table);
     }
 
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->guard()->user()->hasRole('pemilik')) {
+            $query->where('pemilik_id', auth()->guard()->id());
+        }
+
+        return $query;
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -69,6 +82,6 @@ class PropertiResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-    return ['nama_properti'];
+        return ['nama_properti'];
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Penghuni\Schemas;
 
-use Filament\Schemas\Schema;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
 
 class PenghuniInfolist
@@ -22,7 +22,7 @@ class PenghuniInfolist
                             ->label('Nama Penghuni')
                             ->icon('heroicon-o-user')
                             ->weight(FontWeight::Bold)
-                            ->size('lg')
+                            ->size('md')
                             ->placeholder('-'),
 
                         TextEntry::make('status')
@@ -73,8 +73,6 @@ class PenghuniInfolist
                     ->description('Waktu data ini dibuat dan terakhir diperbarui')
                     ->icon('heroicon-o-clock')
                     ->columns(2)
-                    ->collapsible()
-                    ->collapsed()
                     ->schema([
                         TextEntry::make('created_at')
                             ->label('Dibuat pada')

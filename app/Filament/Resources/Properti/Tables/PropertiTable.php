@@ -6,9 +6,10 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class PropertiTable
 {
@@ -69,8 +70,7 @@ class PropertiTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort(fn ($query) =>
-                $query->orderByRaw("CAST(SUBSTRING(id, 2) AS UNSIGNED) ASC")
+            ->defaultSort(fn ($query) => $query->orderByRaw('CAST(SUBSTRING(id, 2) AS UNSIGNED) ASC')
             )
             ->filters([
                 TrashedFilter::make(),
@@ -86,7 +86,7 @@ class PropertiTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                ]),
+                ])->visible(fn () => ! Auth::user()?->hasRole('pemilik')),
             ]);
     }
 }

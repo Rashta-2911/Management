@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Pembayaran;
 use Illuminate\Database\Eloquent\Model;
 
 class PembayaranPolicy extends BaseOwnershipPolicy

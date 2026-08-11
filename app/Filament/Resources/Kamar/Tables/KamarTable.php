@@ -11,6 +11,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class KamarTable
 {
@@ -24,7 +25,7 @@ class KamarTable
                         return $query->orderByRaw("CAST(SUBSTRING(id, 2) AS UNSIGNED) $direction");
                     })
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 TextColumn::make('nomor_kamar')
                     ->label('No. Kamar')
                     ->sortable(query: function ($query, $direction) {
@@ -48,22 +49,22 @@ class KamarTable
                 TextColumn::make('tipeKamar.harga')
                     ->label('Harga')
                     ->money('Rp')
-                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.'))
+                    ->formatStateUsing(fn ($state) => 'Rp '.number_format($state, 0, ',', '.'))
                     ->color('success')
                     ->weight('bold'),
-                
+
                 TextColumn::make('tipeKamar.luas_kamar')
                     ->label('Luas')
                     ->suffix(' m²')
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn ($state) => match($state) {
+                    ->color(fn ($state) => match ($state) {
                         'Tersedia' => 'success',
-                        'Terisi'   => 'danger',
-                        default    => 'gray',
+                        'Terisi' => 'danger',
+                        default => 'gray',
                     })
                     ->searchable(),
 
@@ -72,15 +73,14 @@ class KamarTable
                     ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                    
+
                 TextColumn::make('updated_at')
                     ->label('Diperbarui Pada')
                     ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort(fn ($query) =>
-                $query->orderByRaw("CAST(SUBSTRING(id, 2) AS UNSIGNED) ASC")
+            ->defaultSort(fn ($query) => $query->orderByRaw('CAST(SUBSTRING(id, 2) AS UNSIGNED) ASC')
             )
             ->filters([
                 TrashedFilter::make(),
@@ -97,8 +97,8 @@ class KamarTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make()
-                ]),
+                    RestoreBulkAction::make(),
+                ])->visible(fn () => ! Auth::user()?->hasRole('pemilik')),
             ]);
     }
 }

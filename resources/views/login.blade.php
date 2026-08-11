@@ -632,11 +632,12 @@
                         </span>
                     </button>
                 </form>
-
-                <p class="register-link">
-                    Belum punya akun?
-                    <a id="register-link" href="/admin/register">Daftar di sini</a>
-                </p>
+                <div class="register-link" id="register-section" style="display: block;">
+                    <p>
+                        Belum punya akun Admin?
+                        <a id="register-link" href="/admin/register">Daftar sebagai Admin</a>
+                    </p>
+                </div>
             </div>
 
             <div class="form-footer">
@@ -656,8 +657,8 @@
             const slider = document.getElementById('tab-slider');
             const desc = document.getElementById('tab-desc');
             const btn = document.getElementById('btn-login');
-            const regLink = document.getElementById('register-link');
             const roleInput = document.getElementById('role-input');
+            const registerSection = document.getElementById('register-section');
 
             // Animate description
             desc.style.opacity = '0';
@@ -668,18 +669,19 @@
                     pemilikTab.classList.remove('active');
                     desc.textContent = 'Masuk sebagai Admin untuk mengelola seluruh sistem boarding house.';
                     btn.innerHTML = '<span><i class="ti ti-login"></i> Masuk sebagai Admin</span>';
+                    if(registerSection) registerSection.style.display = 'block';
                 } else {
                     slider.classList.add('right');
                     pemilikTab.classList.add('active');
                     adminTab.classList.remove('active');
                     desc.textContent = 'Masuk sebagai Pemilik untuk mengelola properti dan penyewa Anda.';
                     btn.innerHTML = '<span><i class="ti ti-login"></i> Masuk sebagai Pemilik</span>';
+                    if(registerSection) registerSection.style.display = 'none';
                 }
                 desc.style.opacity = '1';
             }, 150);
 
             roleInput.value = role;
-            regLink.href = '/admin/register';
         }
     </script>
 

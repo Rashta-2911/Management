@@ -5,35 +5,55 @@ namespace App\Filament\Widgets;
 use App\Models\Kamar;
 use App\Models\Pembayaran;
 use App\Models\Penghuni;
-use App\Models\Properti;
 use App\Models\Sewa;
 use App\Models\Tagihan;
+use App\Services\PropertiContext;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Auth;
 
 class StatsOverview extends StatsOverviewWidget
 {
     protected function getStats(): array
     {
-        $totalProperti    = Properti::count('id');
-        $totalKamar       = Kamar::count('id');
-        $kamarTersedia    = Kamar::where('status', '=', 'Tersedia', 'and')->count();
-        $kamarTerisi      = Kamar::where('status', '=', 'Terisi', 'and')->count();
-        $totalPenghuni    = Penghuni::count('id');
-        $sewaAktif        = Sewa::where('status', '=', 'Aktif', 'and')->count();
-        $tagihanTerlambat = Tagihan::where('status', '=', 'Terlambat', 'and')->count();
-        $pendapatanBulanIni = Pembayaran::where('status', '=', 'Lunas', 'and')
+        $propertiId = app(PropertiContext::class)->currentId();
+
+        $qKamar = Kamar::query()->when($propertiId !== null, function ($query) use ($propertiId) {
+            $query->whereHas('tipeKamar', fn ($sq) => $sq->where('properti_id', $propertiId));
+        });
+        $qPenghuni = Penghuni::query()->when($propertiId !== null, function ($query) use ($propertiId) {
+            $query->whereHas('kamar.tipeKamar', fn ($sq) => $sq->where('properti_id', $propertiId));
+        });
+        $qSewa = Sewa::query()->when($propertiId !== null, function ($query) use ($propertiId) {
+            $query->whereHas('kamar.tipeKamar', fn ($sq) => $sq->where('properti_id', $propertiId));
+        });
+        $qTagihan = Tagihan::query()->when($propertiId !== null, function ($query) use ($propertiId) {
+            $query->whereHas('sewa.kamar.tipeKamar', fn ($sq) => $sq->where('properti_id', $propertiId));
+        });
+        $qPembayaran = Pembayaran::query()->when($propertiId !== null, function ($query) use ($propertiId) {
+            $query->whereHas('sewa.kamar.tipeKamar', fn ($sq) => $sq->where('properti_id', $propertiId));
+        });
+
+        $totalProperti = app(PropertiContext::class)->availableFor(Auth::user())->count();
+        $activePropertiName = app(PropertiContext::class)->current()?->nama_properti ?? 'Semua';
+
+        $totalKamar = (clone $qKamar)->count('id');
+        $kamarTersedia = (clone $qKamar)->where('status', '=', 'Tersedia')->count();
+        $kamarTerisi = (clone $qKamar)->where('status', '=', 'Terisi')->count();
+        $totalPenghuni = (clone $qPenghuni)->count('id');
+        $sewaAktif = (clone $qSewa)->where('status', '=', 'Aktif')->count();
+        $tagihanTerlambat = (clone $qTagihan)->where('status', '=', 'Terlambat')->count();
+        $pendapatanBulanIni = (clone $qPembayaran)->where('status', '=', 'Lunas')
             ->whereMonth('tanggal_pembayaran', now()->month)
             ->sum('jumlah');
 
-        // Occupancy rate
         $occupancyRate = $totalKamar > 0
             ? round(($kamarTerisi / $totalKamar) * 100)
             : 0;
 
         return [
-            Stat::make('Total Properti', $totalProperti)
-                ->description('Jumlah semua properti')
+            Stat::make('Properti Aktif', $activePropertiName)
+                ->description("Dari {$totalProperti} properti yang Anda kelola")
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('primary')
                 ->icon('heroicon-o-building-office-2')
@@ -77,7 +97,7 @@ class StatsOverview extends StatsOverviewWidget
                     'class' => 'stat-card stat-card-terlambat',
                 ]),
 
-            Stat::make('Pendapatan Bulan Ini', 'Rp ' . number_format($pendapatanBulanIni, 0, ',', '.'))
+            Stat::make('Pendapatan Bulan Ini', 'Rp '.number_format($pendapatanBulanIni, 0, ',', '.'))
                 ->description('Total pembayaran lunas')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success')

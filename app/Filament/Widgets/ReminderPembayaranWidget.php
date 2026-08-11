@@ -2,9 +2,10 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\Widget;
 use App\Models\Tagihan;
+use App\Services\PropertiContext;
 use App\Services\WhatsappReminderService;
+use Filament\Widgets\Widget;
 
 class ReminderPembayaranWidget extends Widget
 {
@@ -16,11 +17,11 @@ class ReminderPembayaranWidget extends Widget
 
     public function getViewData(): array
     {
+        $propertiId = app(PropertiContext::class)->currentId();
         $baseQuery = Tagihan::query()
+            ->when($propertiId, fn ($q, $id) => $q->whereHas('sewa.kamar.tipeKamar', fn ($sq) => $sq->where('properti_id', $id)))
             ->whereIn('status', ['Belum Lunas', 'Terlambat'], 'and', false)
             ->with(['sewa.penghuni', 'sewa.kamar']);
-
-
 
         $overdue = (clone $baseQuery)
             ->whereDate('tanggal_jatuh_tempo', '<', now())
@@ -34,7 +35,7 @@ class ReminderPembayaranWidget extends Widget
             ->get();
 
         return [
-            'overdue'  => $overdue,
+            'overdue' => $overdue,
             'upcoming' => $upcoming,
         ];
     }

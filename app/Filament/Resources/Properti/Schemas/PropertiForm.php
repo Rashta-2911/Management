@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\Properti\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class PropertiForm
 {
@@ -20,11 +23,25 @@ class PropertiForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
+                                Select::make('pemilik_id')
+                                    ->label('Pemilik')
+                                    ->relationship(
+                                        name: 'pemilik',
+                                        modifyQueryUsing: fn (Builder $query) => $query->role('pemilik')
+                                    )
+                                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->nama} ({$record->email})")
+                                    ->searchable(['nama', 'email'])
+                                    ->preload()
+                                    ->required(fn () => Auth::user()?->hasRole('admin'))
+                                    ->default(fn () => Auth::id())
+                                    ->visible(fn () => Auth::user()?->hasRole('admin'))
+                                    ->columnSpanFull(),
+
                                 TextInput::make('nama_properti')
                                     ->label('Nama Properti')
                                     ->required()
                                     ->prefixIcon('heroicon-o-building-office'),
-                                    
+
                                 TextInput::make('jenis_properti')
                                     ->label('Jenis Properti')
                                     ->required()
@@ -39,6 +56,7 @@ class PropertiForm
                                 TextInput::make('kontak_pemilik')
                                     ->label('Kontak Pemilik')
                                     ->required()
+                                    ->columnSpanFull()
                                     ->prefixIcon('heroicon-o-phone'),
                             ]),
                     ]),
@@ -57,6 +75,7 @@ class PropertiForm
                             ->label('Peraturan')
                             ->required()
                             ->rows(4)
+                            ->nullable()
                             ->columnSpanFull(),
                     ]),
             ]);

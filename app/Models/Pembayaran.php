@@ -3,13 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Override;
 
 class Pembayaran extends Model
 {
     protected $table = 'pembayaran';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
     protected $fillable = [
         'sewa_id',
         'tagihan_id',
@@ -19,10 +24,8 @@ class Pembayaran extends Model
         'status',
         'bukti_pembayaran',
     ];
-    use SoftDeletes;
 
-    public $incrementing = false;
-    protected $keyType = 'string';
+    use SoftDeletes;
 
     #[Override]
     protected static function boot()
@@ -32,16 +35,17 @@ class Pembayaran extends Model
 
             $prefix = 'PYR';
 
-            $last = static::orderByRaw("CAST(SUBSTRING(id, 5) AS UNSIGNED) DESC", [])->first();
+            $last = static::orderByRaw('CAST(SUBSTRING(id, 5) AS UNSIGNED) DESC', [])->first();
 
-            if (!$last) {
-                $model->id = $prefix . '-0001';
+            if (! $last) {
+                $model->id = $prefix.'-0001';
+
                 return;
             }
 
-            $number = (int) str_replace($prefix . '-', '', $last->id);
+            $number = (int) str_replace($prefix.'-', '', $last->id);
 
-            $model->id = $prefix . '-' . str_pad($number + 1, 4, '0', STR_PAD_LEFT);
+            $model->id = $prefix.'-'.str_pad($number + 1, 4, '0', STR_PAD_LEFT);
         });
     }
 

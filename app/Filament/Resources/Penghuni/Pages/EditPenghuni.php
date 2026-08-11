@@ -16,7 +16,7 @@ class EditPenghuni extends EditRecord
         return [
             DeleteAction::make(),
             ViewAction::make(),
-            
+
         ];
     }
 
@@ -24,5 +24,4 @@ class EditPenghuni extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
-
 }
