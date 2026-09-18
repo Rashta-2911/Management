@@ -19,7 +19,9 @@ class TagihanChart extends ChartWidget
     protected function getData(): array
     {
         $propertiId = app(PropertiContext::class)->currentId();
-        $qTagihan = Tagihan::when($propertiId, fn ($q, $id) => $q->whereHas('sewa.kamar.tipeKamar', fn ($sq) => $sq->where('properti_id', $id)));
+        $qTagihan = Tagihan::query()->when($propertiId !== null, function ($query) use ($propertiId) {
+            $query->whereHas('sewa.kamar.tipeKamar', fn ($sq) => $sq->where('properti_id', $propertiId));
+        });
 
         $lunas = (clone $qTagihan)->where('status', '=', 'Lunas')->count();
         $belumLunas = (clone $qTagihan)->where('status', '=', 'Belum lunas')->count();
@@ -31,9 +33,9 @@ class TagihanChart extends ChartWidget
                     'label' => 'Jumlah Tagihan',
                     'data' => [$lunas, $belumLunas, $terlambat],
                     'backgroundColor' => [
-                        '#F5B731',  // Gold — Lunas
-                        '#1E2A45',  // Navy — Belum Lunas
-                        '#A0522D',  // Brick — Terlambat
+                        '#00d492',  // Gold — Lunas
+                        '#FFBD00',  // Navy — Belum Lunas
+                        '#BC5C5C',  // Brick — Terlambat
                     ],
                     'hoverBackgroundColor' => [
                         '#D9A229',  // Darker Gold
