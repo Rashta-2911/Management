@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
-use App\Mail\SlipGajiMail;
 use App\Models\Penggajian;
 use Dompdf\Dompdf;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -35,22 +33,7 @@ class SlipGajiService
         return $path;
     }
 
-    public static function kirimSlipEmail(Penggajian $penggajian): bool
-    {
-        $email = $penggajian->karyawan?->email ?? null;
-
-        if (! $email) {
-            return false;
-        }
-
-        $path = self::buatDanSimpanPdf($penggajian);
-
-        Mail::to($email)->send(new SlipGajiMail($penggajian, $path));
-
-        return true;
-    }
-
-    public static function buatLinkWa(Penggajian $penggajian, string $metode): ?string
+    public static function buatLinkWa(Penggajian $penggajian): ?string
     {
         $nomor = $penggajian->karyawan?->no_telepon;
 
@@ -81,19 +64,15 @@ class SlipGajiService
             ."Download slip gaji:\n{$url}\n\n"
             .'Terima kasih.';
 
-        if ($metode === 'whatsapp') {
-            // wa.me hanya mendukung parameter ?text=, parameter &media= tidak valid
-            $whatsappUrl = 'https://wa.me/'.$nomor.'?text='.rawurlencode($pesan);
+        // wa.me hanya mendukung parameter ?text=, parameter &media= tidak valid
+        $whatsappUrl = 'https://wa.me/'.$nomor.'?text='.rawurlencode($pesan);
 
-            // Tandai slip sebagai sudah dikirim
-            $penggajian->update([
-                'dikirim_at' => now(),
-                'dikirim_via' => 'whatsapp',
-            ]);
+        // Tandai slip sebagai sudah dikirim
+        $penggajian->update([
+            'dikirim_at' => now(),
+            'dikirim_via' => 'whatsapp',
+        ]);
 
-            return $whatsappUrl;
-        }
-
-        return null;
+        return $whatsappUrl;
     }
 }

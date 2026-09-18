@@ -12,7 +12,6 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Radio;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -114,43 +113,26 @@ class PenggajianTable
                     ])),
 
                 Action::make('kirimSlipGaji')
-                    ->label('Kirim Slip')
+                    ->label('Kirim Slip (WA)')
                     ->icon('heroicon-o-paper-airplane')
                     ->color('info')
                     ->visible(fn (Penggajian $record) => $record->status === 'Sudah Dibayar' && (Auth::user()?->hasAnyRole(['pemilik', 'admin']) ?? false)
                     )
-                    ->modalHeading('Kirim Slip Gaji')
-                    ->modalDescription('Pilih metode pengiriman detail gaji untuk karyawan ini.')
-                    ->form([
-                        Radio::make('metode')
-                            ->options([
-                                'email' => 'Kirim via Email',
-                                'whatsapp' => 'Kirim via WhatsApp',
-                            ])
-                            ->required(),
-                    ])
-                    ->action(function (Penggajian $record, array $data) {
-                        if ($data['metode'] === 'email') {
-                            $sent = SlipGajiService::kirimSlipEmail($record);
-
-                            Notification::make()
-                                ->title($sent ? 'Slip gaji berhasil dikirim via email' : 'Alamat email karyawan belum tersedia')
-                                ->success($sent)
-                                ->danger(! $sent)
-                                ->send();
-
-                            return;
-                        }
-
-                        $whatsappUrl = SlipGajiService::buatLinkWa($record, $data['metode']);
+                    ->action(function (Penggajian $record, $livewire) {
+                        $whatsappUrl = SlipGajiService::buatLinkWa($record);
 
                         if ($whatsappUrl) {
                             Notification::make()
                                 ->title('Slip gaji siap dikirim, lanjutkan di WhatsApp')
+                                ->body('WhatsApp dibuka di tab baru. Halaman ini tetap terbuka.')
                                 ->success()
                                 ->send();
 
-                            return redirect()->away($whatsappUrl);
+                            // Buka WhatsApp di tab baru agar halaman penggajian tetap terbuka
+                            $escapedUrl = addslashes($whatsappUrl);
+                            $livewire->js("window.open('{$escapedUrl}', '_blank')");
+
+                            return;
                         }
 
                         Notification::make()
@@ -165,23 +147,15 @@ class PenggajianTable
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
 
-                    BulkAction::make('kirimSlipMassal')
-                        ->label('Kirim Slip Terpilih')
-                        ->icon('heroicon-o-paper-airplane')
+                    BulkAction::make('generatePdfMassal')
+                        ->label('Generate PDF Slip Gaji')
+                        ->icon('heroicon-o-document-arrow-down')
                         ->color('info')
                         ->visible(fn () => Auth::user()?->hasAnyRole(['pemilik', 'admin']) ?? false)
                         ->requiresConfirmation()
-                        ->modalHeading('Kirim Slip Gaji Massal')
-                        ->modalDescription('WhatsApp tidak bisa dikirim massal otomatis (keterbatasan platform) — pilih Email untuk pengiriman langsung, atau gunakan WhatsApp untuk generate PDF saja lalu kirim satu-satu.')
-                        ->form([
-                            Radio::make('metode')
-                                ->options([
-                                    'email' => 'Kirim via Email (otomatis)',
-                                    'whatsapp' => 'Generate PDF saja (kirim manual satu-satu)',
-                                ])
-                                ->required(),
-                        ])
-                        ->action(function (Collection $records, array $data) {
+                        ->modalHeading('Generate PDF Slip Gaji Massal')
+                        ->modalDescription('Proses ini akan membuat file PDF slip gaji untuk data yang dipilih (slip gaji akan tersimpan di sistem agar bisa di-download).')
+                        ->action(function (Collection $records) {
                             $diproses = 0;
 
                             foreach ($records as $record) {
@@ -189,21 +163,11 @@ class PenggajianTable
                                     continue;
                                 }
 
-                                if ($data['metode'] === 'email') {
-                                    if (SlipGajiService::kirimSlipEmail($record)) {
-                                        $diproses++;
-                                    }
-                                } else {
-                                    SlipGajiService::buatDanSimpanPdf($record);
-                                    $diproses++;
-                                }
+                                SlipGajiService::buatDanSimpanPdf($record);
+                                $diproses++;
                             }
 
-                            $pesan = $data['metode'] === 'email'
-                                ? "{$diproses} slip gaji berhasil dikirim via Email"
-                                : "{$diproses} PDF slip gaji berhasil dibuat, silakan kirim via WhatsApp satu per satu";
-
-                            Notification::make()->title($pesan)->success()->send();
+                            Notification::make()->title("{$diproses} PDF slip gaji berhasil dibuat")->success()->send();
                         })
                         ->deselectRecordsAfterCompletion(),
                 ]),
